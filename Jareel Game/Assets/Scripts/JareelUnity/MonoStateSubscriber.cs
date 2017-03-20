@@ -9,7 +9,7 @@ namespace Jareel.Unity
 	/// 
 	/// While mono state subscribers can fire events, they CANNOT listen for events.
 	/// </summary>
-	public abstract class MonoStateSubscriber<S> : MonoBehaviour where S : State, new()
+	public abstract class MonoStateSubscriber : MonoBehaviour
 	{
 		#region Properties
 
@@ -19,15 +19,9 @@ namespace Jareel.Unity
 		public EventManager Events { get; private set; }
 
 		/// <summary>
-		/// Provides access to the state
+		/// Provides access to the states this will subscribe to
 		/// </summary>
-		private StateSubscriber<S> m_subscriber;
-
-		/// <summary>
-		/// The state this is subscribed to. This will not be set until the first state change
-		/// has been registered
-		/// </summary>
-		protected S State { get; private set; }
+		internal StateSubscriber AbstractSubscriber { get; set; }
 
 		/// <summary>
 		/// If true, this will not receive any state updates
@@ -78,7 +72,7 @@ namespace Jareel.Unity
 		internal void ConnectToMaster()
 		{
 			try {
-				m_subscriber = m_master.AbstractMaster.SpawnSubscriber<S>();
+				AbstractSubscriber = GenerateStateSubscrber(m_master.AbstractMaster);
 				Events = m_master.AbstractMaster.Events;
 			}
 			catch (ArgumentException e) {
@@ -89,13 +83,20 @@ namespace Jareel.Unity
 		}
 
 		/// <summary>
+		/// Overload to generate the state subscriber
+		/// </summary>
+		/// <param name="master">The master controller the subscriber should come from</param>
+		/// <returns>Subscriber to all necessary states from the master controller</returns>
+		internal abstract StateSubscriber GenerateStateSubscrber(MasterController master);
+
+		/// <summary>
 		/// Disconnects this subscriber from the master
 		/// 
 		/// If overriding, the base function must be called, or this will break your master controller
 		/// </summary>
 		protected virtual void OnDestroy()
 		{
-			m_master.AbstractMaster.DisconnectSubscriber(m_subscriber);
+			m_master.AbstractMaster.DisconnectSubscriber(AbstractSubscriber);
 		}
 
 		#endregion
@@ -119,9 +120,8 @@ namespace Jareel.Unity
 		/// </summary>
 		private void CheckForStateChange()
 		{
-			if (!Blocked && m_subscriber.Updated) {
-				State = m_subscriber.State;
-				OnStateChanged(State);
+			if (!Blocked && AbstractSubscriber.Updated) {
+				OnStateChanged();
 			}
 		}
 
@@ -131,7 +131,7 @@ namespace Jareel.Unity
 		/// the state in the master controller
 		/// </summary>
 		/// <param name="state">Deep copy of the state this subscriber is subscribed to</param>
-		protected abstract void OnStateChanged(S state);
+		internal abstract void OnStateChanged();
 
 		#endregion
 
@@ -162,5 +162,264 @@ namespace Jareel.Unity
 		}
 
 		#endregion
+	}
+
+	/// <summary>
+	/// MonoStateSubscriber which subscribes to 2 distinct types of states
+	/// </summary>
+	/// <typeparam name="A">The first state type</typeparam>
+	/// <typeparam name="B">The second state type</typeparam>
+	public abstract class MonoStateSubscriber<A> : MonoStateSubscriber
+		where A : State, new()
+	{
+		#region Properties
+
+		/// <summary>
+		/// The first subscribed state
+		/// </summary>
+		protected A State { get; set; }
+
+		/// <summary>
+		/// Casts the subscriber to the actual types used by this mono state subscriber
+		/// </summary>
+		internal StateSubscriber<A> Subscriber { get { return (StateSubscriber<A>)AbstractSubscriber; } }
+
+		#endregion
+
+		/// <summary>
+		/// Overriden to generate a subscriber to all subscribed states
+		/// </summary>
+		/// <param name="master">The master controller to spawn a subscriber from</param>
+		/// <returns>Boxed state subscriber with references to all four subscribed state types</returns>
+		internal override StateSubscriber GenerateStateSubscrber(MasterController master)
+		{
+			return master.SubscribeToStates<A>();
+		}
+
+		/// <summary>
+		/// Every time one of the states change, caches references to all subscribed states and executes the
+		/// user-defined state change handler
+		/// </summary>
+		internal override void OnStateChanged()
+		{
+			State = Subscriber.State1;
+
+			OnStateChanged(State);
+		}
+
+		/// <summary>
+		/// Executed every time the state changes. This passes references to the state for convenience.
+		/// When this function is executed, the subscribed references to the individual states are guaranteed
+		/// to have the latest version of the state in the subscription
+		/// </summary>
+		/// <param name="state1">The first subscribed state</param>
+		protected abstract void OnStateChanged(A state1);
+	}
+
+	/// <summary>
+	/// MonoStateSubscriber which subscribes to 2 distinct types of states
+	/// </summary>
+	/// <typeparam name="A">The first state type</typeparam>
+	/// <typeparam name="B">The second state type</typeparam>
+	public abstract class MonoStateSubscriber<A, B> : MonoStateSubscriber
+		where A : State, new()
+		where B : State, new()
+	{
+		#region Properties
+
+		/// <summary>
+		/// The first subscribed state
+		/// </summary>
+		protected A State1 { get; set; }
+
+		/// <summary>
+		/// The second subscribed state
+		/// </summary>
+		protected B State2 { get; set; }
+
+		/// <summary>
+		/// Casts the subscriber to the actual types used by this mono state subscriber
+		/// </summary>
+		internal StateSubscriber<A, B> Subscriber { get { return (StateSubscriber<A, B>)AbstractSubscriber; } }
+
+		#endregion
+
+		/// <summary>
+		/// Overriden to generate a subscriber to all subscribed states
+		/// </summary>
+		/// <param name="master">The master controller to spawn a subscriber from</param>
+		/// <returns>Boxed state subscriber with references to all four subscribed state types</returns>
+		internal override StateSubscriber GenerateStateSubscrber(MasterController master)
+		{
+			return master.SubscribeToStates<A, B>();
+		}
+
+		/// <summary>
+		/// Every time one of the states change, caches references to all subscribed states and executes the
+		/// user-defined state change handler
+		/// </summary>
+		internal override void OnStateChanged()
+		{
+			State1 = Subscriber.State1;
+			State2 = Subscriber.State2;
+
+			OnStateChanged(State1, State2);
+		}
+
+		/// <summary>
+		/// Executed every time the state changes. This passes references to the two states for convenience.
+		/// When this function is executed, the subscribed references to the individual states are guaranteed
+		/// to have the latest version of the state in the subscription
+		/// </summary>
+		/// <param name="state1">The first subscribed state</param>
+		/// <param name="state2">The second subscribed state</param>
+		protected abstract void OnStateChanged(A state1, B state2);
+	}
+
+	/// <summary>
+	/// MonoStateSubscriber which subscribes to 3 distinct types of states
+	/// </summary>
+	/// <typeparam name="A">The first state type</typeparam>
+	/// <typeparam name="B">The second state type</typeparam>
+	/// <typeparam name="C">The third state type</typeparam>
+	public abstract class MonoStateSubscriber<A, B, C> : MonoStateSubscriber
+		where A : State, new()
+		where B : State, new()
+		where C : State, new()
+	{
+		#region Properties
+
+		/// <summary>
+		/// The first subscribed state
+		/// </summary>
+		protected A State1 { get; set; }
+
+		/// <summary>
+		/// The second subscribed state
+		/// </summary>
+		protected B State2 { get; set; }
+
+		/// <summary>
+		/// The third subscribed state
+		/// </summary>
+		protected C State3 { get; set; }
+
+		/// <summary>
+		/// Casts the subscriber to the actual types used by this mono state subscriber
+		/// </summary>
+		internal StateSubscriber<A, B, C> Subscriber { get { return (StateSubscriber<A, B, C>)AbstractSubscriber; } }
+
+		#endregion
+
+		/// <summary>
+		/// Overriden to generate a subscriber to all subscribed states
+		/// </summary>
+		/// <param name="master">The master controller to spawn a subscriber from</param>
+		/// <returns>Boxed state subscriber with references to all four subscribed state types</returns>
+		internal override StateSubscriber GenerateStateSubscrber(MasterController master)
+		{
+			return master.SubscribeToStates<A, B, C>();
+		}
+
+		/// <summary>
+		/// Every time one of the states change, caches references to all subscribed states and executes the
+		/// user-defined state change handler
+		/// </summary>
+		internal override void OnStateChanged()
+		{
+			State1 = Subscriber.State1;
+			State2 = Subscriber.State2;
+			State3 = Subscriber.State3;
+
+			OnStateChanged(State1, State2, State3);
+		}
+
+		/// <summary>
+		/// Executed every time the state changes. This passes references to the three states for convenience.
+		/// When this function is executed, the subscribed references to the individual states are guaranteed
+		/// to have the latest version of the state in the subscription
+		/// </summary>
+		/// <param name="state1">The first subscribed state</param>
+		/// <param name="state2">The second subscribed state</param>
+		/// <param name="state3">The third subscribed state</param>
+		protected abstract void OnStateChanged(A state1, B state2, C state3);
+	}
+
+	/// <summary>
+	/// MonoStateSubscriber which subscribes to 4 distinct types of states
+	/// </summary>
+	/// <typeparam name="A">The first state type</typeparam>
+	/// <typeparam name="B">The second state type</typeparam>
+	/// <typeparam name="C">The third state type</typeparam>
+	/// <typeparam name="D">The fourth state type</typeparam>
+	public abstract class MonoStateSubscriber<A, B, C, D> : MonoStateSubscriber
+		where A : State, new()
+		where B : State, new()
+		where C : State, new()
+		where D : State, new()
+	{
+		#region Properties
+
+		/// <summary>
+		/// The first subscribed state
+		/// </summary>
+		protected A State1 { get; set; }
+
+		/// <summary>
+		/// The second subscribed state
+		/// </summary>
+		protected B State2 { get; set; }
+
+		/// <summary>
+		/// The third subscribed state
+		/// </summary>
+		protected C State3 { get; set; }
+
+		/// <summary>
+		/// The fourth subscribed state
+		/// </summary>
+		protected D State4 { get; set; }
+
+		/// <summary>
+		/// Casts the subscriber to the actual types used by this mono state subscriber
+		/// </summary>
+		internal StateSubscriber<A, B, C, D> Subscriber { get { return (StateSubscriber<A, B, C, D>)AbstractSubscriber; } }
+
+		#endregion
+
+		/// <summary>
+		/// Overriden to generate a subscriber to all subscribed states
+		/// </summary>
+		/// <param name="master">The master controller to spawn a subscriber from</param>
+		/// <returns>Boxed state subscriber with references to all four subscribed state types</returns>
+		internal override StateSubscriber GenerateStateSubscrber(MasterController master)
+		{
+			return master.SubscribeToStates<A, B, C, D>();
+		}
+
+		/// <summary>
+		/// Every time one of the states change, caches references to all subscribed states and executes the
+		/// user-defined state change handler
+		/// </summary>
+		internal override void OnStateChanged()
+		{
+			State1 = Subscriber.State1;
+			State2 = Subscriber.State2;
+			State3 = Subscriber.State3;
+			State4 = Subscriber.State4;
+
+			OnStateChanged(State1, State2, State3, State4);
+		}
+
+		/// <summary>
+		/// Executed every time the state changes. This passes references to the four states for convenience.
+		/// When this function is executed, the subscribed references to the individual states are guaranteed
+		/// to have the latest version of the state in the subscription
+		/// </summary>
+		/// <param name="state1">The first subscribed state</param>
+		/// <param name="state2">The second subscribed state</param>
+		/// <param name="state3">The third subscribed state</param>
+		/// <param name="state4">The fourth subscribed state</param>
+		protected abstract void OnStateChanged(A state1, B state2, C state3, D state4);
 	}
 }
