@@ -86,20 +86,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Demo\Scripts\Content\World\MapData.cs" />
-    <Compile Include="Assets\Demo\Scripts\Content\World\MapRepository.cs" />
-    <Compile Include="Assets\Demo\Scripts\GameMasterController.cs" />
-    <Compile Include="Assets\Demo\Scripts\GameMasterMonoController.cs" />
-    <Compile Include="Assets\Demo\Scripts\States\Location\LocationState.cs" />
-    <Compile Include="Assets\Demo\Scripts\States\World\WorldState.cs" />
-    <Compile Include="Assets\Demo\Scripts\Utility\ComponentCache.cs" />
-    <Compile Include="Assets\Demo\Scripts\Utility\UIExtensions.cs" />
-    <Compile Include="Assets\Demo\Scripts\Views\Player\PlayerView.cs" />
-    <Compile Include="Assets\Demo\Scripts\Views\World\ChangeMapView.cs" />
-    <Compile Include="Assets\Demo\Scripts\Views\World\WorldTile.cs" />
-    <Compile Include="Assets\Demo\Scripts\Views\World\WorldView.cs" />
-    <Compile Include="Assets\Scripts\JareelUnity\MonoMasterController.cs" />
-    <Compile Include="Assets\Scripts\JareelUnity\MonoStateSubscriber.cs" />
+    <Compile Include="Assets\JareelUnity\MonoMasterController.cs" />
+    <Compile Include="Assets\JareelUnity\MonoStateSubscriber.cs" />
+    <Compile Include="Assets\Scripts\Master.cs" />
+    <Compile Include="Assets\Scripts\States\Action.cs" />
+    <Compile Include="Assets\Scripts\Views\ActionsView.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
