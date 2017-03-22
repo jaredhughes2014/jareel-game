@@ -25,9 +25,9 @@ namespace Game
 
 		// Action string constants
 		public const string Action1String = "action1";
-		public const string Action2String = "action1";
-		public const string Action3String = "action1";
-		public const string Action4String = "action1";
+		public const string Action2String = "action2";
+		public const string Action3String = "action3";
+		public const string Action4String = "action4";
 
 		#endregion
 
@@ -36,7 +36,7 @@ namespace Game
 		/// <summary>
 		/// The history of actions performed by the user
 		/// </summary>
-		[StateData("history")] public List<string> ActionHistory { get; set; }
+		[StateData("history")] public string ActionHistory { get; set; }
 
 		#endregion
 
@@ -45,7 +45,7 @@ namespace Game
 		/// </summary>
 		public ActionState()
 		{
-			ActionHistory = new List<string>();
+            ActionHistory = "";
 		}
 	}
 
@@ -60,7 +60,7 @@ namespace Game
 		[EventListener(ActionEvent.UseAction1)]
 		private void RegisterAction1()
 		{
-			State.ActionHistory.Add(ActionState.Action1String);
+			State.ActionHistory = ActionState.Action1String;
 		}
 
 		/// <summary>
@@ -69,7 +69,7 @@ namespace Game
 		[EventListener(ActionEvent.UseAction2)]
 		private void RegisterAction2()
 		{
-			State.ActionHistory.Add(ActionState.Action2String);
+			State.ActionHistory = ActionState.Action2String;
 		}
 
 		/// <summary>
@@ -78,7 +78,7 @@ namespace Game
 		[EventListener(ActionEvent.UseAction3)]
 		private void RegisterAction3()
 		{
-			State.ActionHistory.Add(ActionState.Action3String);
+			State.ActionHistory = ActionState.Action3String;
 		}
 
 		/// <summary>
@@ -87,7 +87,7 @@ namespace Game
 		[EventListener(ActionEvent.UseAction4)]
 		private void RegisterAction4()
 		{
-			State.ActionHistory.Add(ActionState.Action4String);
+			State.ActionHistory = ActionState.Action4String;
 		}
 
 		/// <summary>
@@ -96,8 +96,8 @@ namespace Game
 		/// <returns>Deep copy of the action state</returns>
 		public override ActionState CloneState()
 		{
-			return new ActionState() {
-				ActionHistory = State.ActionHistory.Select(p => p).ToList()
+            return new ActionState() {
+                ActionHistory = State.ActionHistory
 			};
 		}
 	}

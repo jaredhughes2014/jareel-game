@@ -14,7 +14,7 @@ namespace Game
 		/// </summary>
 		protected override void UseControllers()
 		{
-			
+            Use<ActionState, ActionController>();
 		}
 	}
 

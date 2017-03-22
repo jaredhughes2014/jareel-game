@@ -47,15 +47,22 @@ namespace Game
 		/// <param name="state">The state to render this view from</param>
 		protected override void OnStateChanged(ActionState state)
 		{
-			var last = state.ActionHistory.LastOrDefault();
+            var last = state.ActionHistory;
 
 			if (string.IsNullOrEmpty(last)) {
 				m_actionImage.color = Color.black;
 			}
-
+            else {
+                m_actionImage.color = GetActionIndicatorColor(last);
+            }
 
 		}
 
+        /// <summary>
+        /// Gets the color to set the action image based on the last action performed
+        /// </summary>
+        /// <param name="last">The last action performed by the user</param>
+        /// <returns>The color to set the action image</returns>
 		private Color GetActionIndicatorColor(string last)
 		{
 			if (last == null) return Color.black;
@@ -73,6 +80,42 @@ namespace Game
 			}
 		}
 
-		#endregion
-	}
+        #endregion
+
+        #region Events
+
+        /// <summary>
+        /// Executes the first action event
+        /// </summary>
+        public void UseAction1()
+        {
+            Events.Execute(ActionEvent.UseAction1);
+        }
+
+        /// <summary>
+        /// Executes the second action event
+        /// </summary>
+        public void UseAction2()
+        {
+            Events.Execute(ActionEvent.UseAction2);
+        }
+
+        /// <summary>
+        /// Executes the third action event
+        /// </summary>
+        public void UseAction3()
+        {
+            Events.Execute(ActionEvent.UseAction3);
+        }
+
+        /// <summary>
+        /// Executes the fourth action event
+        /// </summary>
+        public void UseAction4()
+        {
+            Events.Execute(ActionEvent.UseAction4);
+        }
+
+        #endregion
+    }
 }
