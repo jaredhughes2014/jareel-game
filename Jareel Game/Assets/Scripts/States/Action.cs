@@ -36,7 +36,7 @@ namespace Game
 		/// <summary>
 		/// The history of actions performed by the user
 		/// </summary>
-		[StateData("history")] public string ActionHistory { get; set; }
+		[StateData("history")] public List<string> ActionHistory { get; set; }
 
 		#endregion
 
@@ -45,7 +45,7 @@ namespace Game
 		/// </summary>
 		public ActionState()
 		{
-            ActionHistory = "";
+            ActionHistory = new List<string>();
 		}
 	}
 
@@ -60,7 +60,7 @@ namespace Game
 		[EventListener(ActionEvent.UseAction1)]
 		private void RegisterAction1()
 		{
-			State.ActionHistory = ActionState.Action1String;
+			State.ActionHistory.Add(ActionState.Action1String);
 		}
 
 		/// <summary>
@@ -69,7 +69,7 @@ namespace Game
 		[EventListener(ActionEvent.UseAction2)]
 		private void RegisterAction2()
 		{
-			State.ActionHistory = ActionState.Action2String;
+			State.ActionHistory.Add(ActionState.Action2String);
 		}
 
 		/// <summary>
@@ -78,7 +78,7 @@ namespace Game
 		[EventListener(ActionEvent.UseAction3)]
 		private void RegisterAction3()
 		{
-			State.ActionHistory = ActionState.Action3String;
+			State.ActionHistory.Add(ActionState.Action3String);
 		}
 
 		/// <summary>
@@ -87,7 +87,7 @@ namespace Game
 		[EventListener(ActionEvent.UseAction4)]
 		private void RegisterAction4()
 		{
-			State.ActionHistory = ActionState.Action4String;
+			State.ActionHistory.Add(ActionState.Action4String);
 		}
 
 		/// <summary>
@@ -97,7 +97,7 @@ namespace Game
 		public override ActionState CloneState()
 		{
             return new ActionState() {
-                ActionHistory = State.ActionHistory
+                ActionHistory = State.ActionHistory.Select(p => p).ToList()
 			};
 		}
 	}

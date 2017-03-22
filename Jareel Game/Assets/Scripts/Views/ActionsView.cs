@@ -47,7 +47,7 @@ namespace Game
 		/// <param name="state">The state to render this view from</param>
 		protected override void OnStateChanged(ActionState state)
 		{
-            var last = state.ActionHistory;
+            var last = state.ActionHistory.LastOrDefault();
 
 			if (string.IsNullOrEmpty(last)) {
 				m_actionImage.color = Color.black;
