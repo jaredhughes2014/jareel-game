@@ -8,9 +8,14 @@ namespace Game
 	/// <summary>
 	/// Renders the view of the user's available actions
 	/// </summary>
-	public class ActionsView : MonoStateSubscriber<ActionState>
+	public class ActionsView : MonoStateSubscriber<ActionState, UIState>
 	{
-		#region Fields
+        #region Fields
+
+        /// <summary>
+        /// The root of the actions view
+        /// </summary>
+        [SerializeField] private GameObject m_viewRoot;
 
 		/// <summary>
 		/// The image which changes color based on the previous action
@@ -44,18 +49,22 @@ namespace Game
 		/// <summary>
 		/// Every update, render the actions
 		/// </summary>
-		/// <param name="state">The state to render this view from</param>
-		protected override void OnStateChanged(ActionState state)
+		/// <param name="actions">The state to render this view from</param>
+		protected override void OnStateChanged(ActionState actions, UIState ui)
 		{
-            var last = state.ActionHistory.LastOrDefault();
+            bool open = ui.InCombat;
+            m_viewRoot.SetActive(open);
 
-			if (string.IsNullOrEmpty(last)) {
-				m_actionImage.color = Color.black;
-			}
-            else {
-                m_actionImage.color = GetActionIndicatorColor(last);
+            if (open) {
+                var last = actions.ActionHistory.LastOrDefault();
+
+                if (string.IsNullOrEmpty(last)) {
+                    m_actionImage.color = Color.black;
+                }
+                else {
+                    m_actionImage.color = GetActionIndicatorColor(last);
+                }
             }
-
 		}
 
         /// <summary>
@@ -89,7 +98,7 @@ namespace Game
         /// </summary>
         public void UseAction1()
         {
-            Events.Execute(ActionEvent.UseAction1);
+            Events.ExecuteStrict(ActionEvent.UseAction1);
         }
 
         /// <summary>
@@ -97,7 +106,7 @@ namespace Game
         /// </summary>
         public void UseAction2()
         {
-            Events.Execute(ActionEvent.UseAction2);
+            Events.ExecuteStrict(ActionEvent.UseAction2);
         }
 
         /// <summary>
@@ -105,7 +114,7 @@ namespace Game
         /// </summary>
         public void UseAction3()
         {
-            Events.Execute(ActionEvent.UseAction3);
+            Events.ExecuteStrict(ActionEvent.UseAction3);
         }
 
         /// <summary>
@@ -113,7 +122,15 @@ namespace Game
         /// </summary>
         public void UseAction4()
         {
-            Events.Execute(ActionEvent.UseAction4);
+            Events.ExecuteStrict(ActionEvent.UseAction4);
+        }
+
+        /// <summary>
+        /// TODO This is a temporary function for demonstration
+        /// </summary>
+        public void LeaveCombat()
+        {
+            Events.ExecuteStrict(GeneralEvent.SetInCombat, false);
         }
 
         #endregion
