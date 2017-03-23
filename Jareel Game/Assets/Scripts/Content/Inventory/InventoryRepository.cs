@@ -1,5 +1,6 @@
 ﻿
 using UnityEngine;
+using System.Linq;
 
 namespace Game
 {
@@ -9,9 +10,20 @@ namespace Game
     public class InventoryRepository : GameContent
     {
         /// <summary>
-        /// All inventory items available
+        /// All basic items available
         /// </summary>
-        [SerializeField] private InventoryItem[] m_inventory;
-        public InventoryItem[] Inventory { get { return m_inventory; } }
-    }
+        [SerializeField] private InventoryItem[] m_items;
+        public InventoryItem[] Items { get { return m_items; } }
+
+		/// <summary>
+		/// All potion items available
+		/// </summary>
+		[SerializeField] private InventoryItem[] m_potions;
+		public InventoryItem[] Potions { get { return m_potions; } }
+
+		/// <summary>
+		/// Combines all items into a single array
+		/// </summary>
+		public InventoryItem[] AllItems { get { return Items.Union(Potions).ToArray(); } }
+	}
 }

@@ -20,7 +20,7 @@ namespace Game
             SOCreator.CreateAsset<InventoryItem>();
         }
 
-        [MenuItem(ContentPath + "Inventory Item")]
+        [MenuItem(ContentPath + "Inventory Repository")]
         public static void CreateInventoryRepository()
         {
             SOCreator.CreateAsset<InventoryRepository>();

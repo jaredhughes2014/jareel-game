@@ -10,7 +10,7 @@ namespace Game
         /// <summary>
         /// The ID of this content item
         /// </summary>
-        [SerializeField] private string m_id;
+        [SerializeField, HideInInspector] private string m_id;
         public string ID { get { return m_id; } }
 
         /// <summary>

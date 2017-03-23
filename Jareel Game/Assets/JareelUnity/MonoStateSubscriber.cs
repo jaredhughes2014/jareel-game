@@ -96,7 +96,9 @@ namespace Jareel.Unity
 		/// </summary>
 		protected virtual void OnDestroy()
 		{
-			m_master.AbstractMaster.DisconnectSubscriber(AbstractSubscriber);
+			if (AbstractSubscriber != null) {
+				m_master.AbstractMaster.DisconnectSubscriber(AbstractSubscriber);
+			}
 		}
 
 		#endregion

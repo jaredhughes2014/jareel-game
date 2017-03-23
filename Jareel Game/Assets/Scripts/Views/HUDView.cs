@@ -19,9 +19,9 @@ namespace Game
         /// <param name="ui"></param>
         protected override void OnStateChanged(UIState ui)
         {
-            bool combat = !ui.InCombat;
+			bool open = !ui.InCombat && !ui.InventoryOpen;
 
-            m_viewRoot.SetActive(combat);
+            m_viewRoot.SetActive(open);
         }
 
         #region Events

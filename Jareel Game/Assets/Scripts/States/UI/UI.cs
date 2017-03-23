@@ -16,21 +16,24 @@ namespace Game
     [StateContainer("ui")]
     public class UIState : State
     {
-        #region StateData
+		#region StateData
 
-        /// <summary>
-        /// If true, the action UI should open instead of the basic HUD
-        /// </summary>
-        [StateData] public bool InCombat { get; set; }
+		/// <summary>
+		/// If true, the action UI should open instead of the basic HUD
+		/// </summary>
+		[StateData] public bool InCombat { get; set; }
 
         /// <summary>
         /// If true, the inventory view should be displayed
         /// </summary>
         [StateData] public bool InventoryOpen { get; set; }
 
-        #endregion
+		#endregion
     }
 
+	/// <summary>
+	/// Controls modification and cloning of the UI state
+	/// </summary>
     public class UIController : StateController<UIState>
     {
         #region Event Listeners
@@ -69,7 +72,7 @@ namespace Game
         {
             return new UIState() {
                 InCombat = State.InCombat,
-                InventoryOpen = State.InventoryOpen
+                InventoryOpen = State.InventoryOpen,
             };
         }
     }
