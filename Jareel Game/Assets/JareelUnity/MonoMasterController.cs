@@ -20,7 +20,7 @@ namespace Jareel.Unity
 		/// <summary>
 		/// Manages execution of updates to the master controller
 		/// </summary>
-		private SequentialExecutor m_executor;
+		protected SequentialExecutor m_executor;
 
 		#endregion
 

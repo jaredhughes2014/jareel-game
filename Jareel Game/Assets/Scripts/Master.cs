@@ -36,6 +36,16 @@ namespace Game
 		[SerializeField, TextArea] private string m_saveFile;
 
 		/// <summary>
+		/// In the editor, copy a time traveler export to have states ready to play
+		/// </summary>
+		[SerializeField, TextArea] private string m_timeTravelerExport;
+
+		/// <summary>
+		/// Controls the time traveler used for this game
+		/// </summary>
+		[SerializeField] private TimeTravelerView m_timeTraveler;
+
+		/// <summary>
 		/// Check for a debug save file to load from
 		/// </summary>
 		private void Start()
@@ -53,10 +63,18 @@ namespace Game
             base.Update();
 
             // Debug activation
-            if (InputUtility.ButtonsHeld(KeyCode.LeftShift, KeyCode.LeftControl)) {
+            if (InputUtility.ButtonsHeld(KeyCode.LeftShift, KeyCode.LeftControl, KeyCode.D)) {
                 Master.Events.Execute(SessionEvent.ToggleDebug);
             }
-        }
+
+			else if (InputUtility.ButtonsHeld(KeyCode.LeftControl, KeyCode.LeftShift, KeyCode.T)) {
+
+				if (m_timeTraveler.TimeTraveler == null) {
+					m_timeTraveler.TimeTraveler = m_executor.SpawnTimeTraveler(false);
+				}
+				m_timeTraveler.gameObject.SetActive(!m_timeTraveler.gameObject.activeSelf);
+			}
+		}
 
         /// <summary>
         /// Prints the current save state to debug so it can be copied and pasted into the
