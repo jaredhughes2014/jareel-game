@@ -14,15 +14,6 @@ namespace Game
     }
 
     /// <summary>
-    /// Collection of bags available in the state
-    /// </summary>
-    public enum InventoryBag
-    {
-        Main,
-        Potions
-    }
-
-    /// <summary>
     /// Contains the state of the player's inventory
     /// </summary>
     [StateContainer("inventory")]
@@ -39,6 +30,16 @@ namespace Game
         /// The default capacity of the potions bag
         /// </summary>
         public const int DefaultCapacityPotions = 10;
+
+        /// <summary>
+        /// The name of the user's primary bag
+        /// </summary>
+        public const string MainBagName = "MainBag";
+
+        /// <summary>
+        /// The name of the bag which holds all potions
+        /// </summary>
+        public const string PotionsBagName = "Potions";
 
         #endregion
 
@@ -87,7 +88,7 @@ namespace Game
         /// <param name="bag">The bag to place the item in</param>
         /// <param name="slot">The slot to place the item in</param>
         [EventListener(InventoryEvent.SetItem)]
-        private void SetItem(string id, InventoryBag bag, int slot)
+        private void SetItem(string id, string bag, int slot)
         {
             GetBag(bag)[slot] = id;
         }
@@ -98,7 +99,7 @@ namespace Game
         /// <param name="bag">The bag to remove the item from</param>
         /// <param name="slot">The slot to remove an item from</param>
         [EventListener(InventoryEvent.RemoveItem)]
-        private void UseItem(InventoryBag bag, int slot)
+        private void UseItem(string bag, int slot)
         {
             GetBag(bag)[slot] = null;
         }
@@ -108,11 +109,11 @@ namespace Game
         /// </summary>
         /// <param name="bag">Bag value</param>
         /// <returns>List corresponding to the given bag</returns>
-        private List<string> GetBag(InventoryBag bag)
+        private List<string> GetBag(string bag)
         {
             switch (bag) {
-                case (InventoryBag.Main): return State.MainBag;
-                case (InventoryBag.Potions): return State.Potions;
+                case (InventoryState.MainBagName): return State.MainBag;
+                case (InventoryState.PotionsBagName): return State.Potions;
                 default: return null;
             }
         }

@@ -64,11 +64,11 @@ namespace Game
 		private void OpenBag(string bag)
 		{
 			switch (bag) {
-				case (InventoryUIState.MainBagName):
+				case (InventoryState.MainBagName):
 					RenderBag(m_activeBagRoot, State1.MainBag);
 					break;
 
-				case (InventoryUIState.PotionsBagName):
+				case (InventoryState.PotionsBagName):
 					RenderBag(m_activeBagRoot, State1.Potions);
 					break;
 
@@ -116,9 +116,6 @@ namespace Game
         /// </summary>
         public void CloseInventory()
         {
-			if (State2.SelectedSlot >= 0) {
-				Events.ExecuteStrict(InventoryUIEvent.CloseItem);
-			}
 			if (!string.IsNullOrEmpty(State2.OpenBag)) {
 				Events.ExecuteStrict(InventoryUIEvent.CloseBag);
 			}
@@ -132,7 +129,7 @@ namespace Game
 		/// </summary>
 		public void OpenMainBag()
 		{
-			Events.ExecuteStrict(InventoryUIEvent.OpenBag, InventoryUIState.MainBagName);
+			Events.ExecuteStrict(InventoryUIEvent.OpenBag, InventoryState.MainBagName);
 		}
 
 		/// <summary>
@@ -140,7 +137,7 @@ namespace Game
 		/// </summary>
 		public void OpenPotionBag()
 		{
-			Events.ExecuteStrict(InventoryUIEvent.OpenBag, InventoryUIState.PotionsBagName);
+			Events.ExecuteStrict(InventoryUIEvent.OpenBag, InventoryState.PotionsBagName);
 		}
 
 		/// <summary>

@@ -21,7 +21,7 @@ namespace Game
         /// <summary>
         /// If true, this is a debug session
         /// </summary>
-        [StateData] public bool DebugEnabled { get; set; }
+        [StateData(false)] public bool DebugEnabled { get; set; }
 
         /// <summary>
         /// If true, the debug menu has been triggered at least once

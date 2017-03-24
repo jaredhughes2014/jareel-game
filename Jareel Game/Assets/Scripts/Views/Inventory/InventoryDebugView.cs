@@ -80,7 +80,7 @@ namespace Game
 			slot = State1.MainBag.IndexOf(null);
 
 			if (slot >= 0) {
-				Events.Execute(InventoryEvent.SetItem, item.ID, InventoryBag.Main, slot);
+				Events.Execute(InventoryEvent.SetItem, item.ID, InventoryState.MainBagName, slot);
 			}
 		}
 
@@ -94,7 +94,7 @@ namespace Game
 			slot = State1.Potions.IndexOf(null);
 
 			if (slot >= 0) {
-				Events.Execute(InventoryEvent.SetItem, potion.ID, InventoryBag.Potions, slot);
+				Events.Execute(InventoryEvent.SetItem, potion.ID, InventoryState.PotionsBagName, slot);
 			}
 		}
 

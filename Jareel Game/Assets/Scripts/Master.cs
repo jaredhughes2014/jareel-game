@@ -33,7 +33,7 @@ namespace Game
 		/// <summary>
 		/// In the editor, copy a save file here to load from that save file
 		/// </summary>
-		[SerializeField] private string m_saveFile;
+		[SerializeField, TextArea] private string m_saveFile;
 
 		/// <summary>
 		/// Check for a debug save file to load from
@@ -64,7 +64,7 @@ namespace Game
         /// </summary>
         private void OnDestroy()
 		{
-			Debug.Log(Master.ExportStates());
+			Debug.Log(Master.ExportDebugState());
 		}
 	}
 }

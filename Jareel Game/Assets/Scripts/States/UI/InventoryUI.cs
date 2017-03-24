@@ -22,15 +22,7 @@ namespace Game
 	{
 		#region Constants
 
-		/// <summary>
-		/// The name of the user's primary bag
-		/// </summary>
-		public const string MainBagName = "MainBag";
 
-		/// <summary>
-		/// The name of the bag which holds all potions
-		/// </summary>
-		public const string PotionsBagName = "Potions";
 
 		#endregion
 
