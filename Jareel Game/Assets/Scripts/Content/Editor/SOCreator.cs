@@ -12,7 +12,7 @@ namespace Game
         /// <summary>
         //	This makes it easy to create, name and place unique new ScriptableObject asset files.
         /// </summary>
-        public static void CreateAsset<T>() where T : ScriptableObject
+        public static void CreateAsset<T>(int i) where T : ScriptableObject
         {
             T asset = ScriptableObject.CreateInstance<T>();
 
@@ -24,7 +24,7 @@ namespace Game
                 path = path.Replace(Path.GetFileName(AssetDatabase.GetAssetPath(Selection.activeObject)), "");
             }
 
-            string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath(path + "/New " + typeof(T).ToString() + ".asset");
+            string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath(path + "/New " + typeof(T).Name + i + ".asset");
 
             AssetDatabase.CreateAsset(asset, assetPathAndName);
 
@@ -32,6 +32,18 @@ namespace Game
             AssetDatabase.Refresh();
             EditorUtility.FocusProjectWindow();
             Selection.activeObject = asset;
+        }
+
+        /// <summary>
+        /// Shortcut to make multiple
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="count"></param>
+        public static void CreateAssets<T>(int count) where T : ScriptableObject
+        {
+            for (int i = 0; i < count; ++i) {
+                CreateAsset<T>(i + 1);
+            }
         }
     }
 }

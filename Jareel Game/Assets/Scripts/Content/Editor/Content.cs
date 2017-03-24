@@ -17,13 +17,13 @@ namespace Game
         [MenuItem(ContentPath + "Inventory Item")]
         public static void CreateInventoryItem()
         {
-            SOCreator.CreateAsset<InventoryItem>();
+            SOWindow.Open<InventoryItem>();
         }
 
         [MenuItem(ContentPath + "Inventory Repository")]
         public static void CreateInventoryRepository()
         {
-            SOCreator.CreateAsset<InventoryRepository>();
+            SOWindow.Open<InventoryRepository>();
         }
     }
 }
