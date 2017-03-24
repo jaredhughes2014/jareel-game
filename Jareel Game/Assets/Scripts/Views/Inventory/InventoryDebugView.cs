@@ -8,7 +8,7 @@ namespace Game
 	/// <summary>
 	/// Special view used 
 	/// </summary>
-	public class InventoryDebugView : MonoStateSubscriber<InventoryState, InventoryUIState>
+	public class InventoryDebugView : MonoStateSubscriber<InventoryState, InventoryUIState, SessionState>
 	{
 		#region Fields
 
@@ -39,9 +39,11 @@ namespace Game
 		/// </summary>
 		/// <param name="state1">The state of the player's inventory</param>
 		/// <param name="state2">The state of the inventory UI</param>
-		protected override void OnStateChanged(InventoryState state1, InventoryUIState state2)
+        /// <param name="state3">The state of the player's session</param>
+		protected override void OnStateChanged(InventoryState state1, InventoryUIState state2, SessionState state3)
 		{
-			bool open = state2.Open;
+			bool open = state2.Open && state3.DebugEnabled;
+
 			m_viewRoot.gameObject.SetActive(open);
 
 			if (open) {

@@ -15,6 +15,7 @@ namespace Game
 		protected override void UseControllers()
 		{
             //Player Data Controllers
+            Use<SessionState, SessionController>();
             Use<ActionState, ActionController>();
             Use<InventoryState, InventoryController>();
 
@@ -44,11 +45,24 @@ namespace Game
 			}
 		}
 
-		/// <summary>
-		/// Prints the current save state to debug so it can be copied and pasted into the
-		/// debug save file field on this behavior
-		/// </summary>
-		private void OnDestroy()
+        /// <summary>
+        /// This is where debug checking is performed
+        /// </summary>
+        protected override void Update()
+        {
+            base.Update();
+
+            // Debug activation
+            if (InputUtility.ButtonsHeld(KeyCode.LeftShift, KeyCode.LeftControl)) {
+                Master.Events.Execute(SessionEvent.ToggleDebug);
+            }
+        }
+
+        /// <summary>
+        /// Prints the current save state to debug so it can be copied and pasted into the
+        /// debug save file field on this behavior
+        /// </summary>
+        private void OnDestroy()
 		{
 			Debug.Log(Master.ExportStates());
 		}
