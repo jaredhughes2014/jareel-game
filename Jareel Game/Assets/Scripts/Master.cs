@@ -14,12 +14,15 @@ namespace Game
 		/// </summary>
 		protected override void UseControllers()
 		{
-            //Player Data Controllers
+            // Game Data
             Use<SessionState, SessionController>();
-            Use<ActionState, ActionController>();
-            Use<InventoryState, InventoryController>();
 
-            //UI controllers
+            // Player Data
+            Use<PlayerStatsState, PlayerStatsController>();
+            Use<InventoryState, InventoryController>();
+            Use<ActionState, ActionController>();
+
+            // UI
             Use<UIState, UIController>();
 			Use<InventoryUIState, InventoryUIController>();
 		}
