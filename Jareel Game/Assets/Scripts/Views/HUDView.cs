@@ -57,20 +57,20 @@ namespace Game
         }
 
         /// <summary>
+        /// Opens the character sheet view
+        /// </summary>
+        public void OpenCharacterSheet()
+        {
+            Events.ExecuteStrict(UIEvent.OpenPanel, UIState.CharacterSheetName);
+        }
+
+        /// <summary>
         /// Sets the slider to be either open or closed
         /// </summary>
         /// <param name="open">If true, the slider will open</param>
         public void SetSliderOpen(bool open)
         {
             Events.ExecuteStrict(HUDEvent.SetSliderOpen, open);
-        }
-
-        /// <summary>
-        /// Opens the character sheet view
-        /// </summary>
-        public void OpenCharacterSheet()
-        {
-            Debug.Log("NYI");
         }
 
         #endregion

@@ -22,12 +22,14 @@ namespace Game
             Use<PlayerStatsState, PlayerStatsController>();
             Use<InventoryState, InventoryController>();
             Use<ActionState, ActionController>();
+            Use<CharacterState, CharacterController>();
 
             // UI
             Use<UIState, UIController>();
 			Use<InventoryUIState, InventoryUIController>();
             Use<HUDState, HUDController>();
             Use<CombatUIState, CombatUIController>();
+            Use<CharacterSheetState, CharacterSheetController>();
 		}
 	}
 
