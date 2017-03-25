@@ -120,7 +120,7 @@ namespace Game
 				Events.ExecuteStrict(InventoryUIEvent.CloseBag);
 			}
 			else {
-				Events.ExecuteStrict(UIEvent.SetInventoryOpen, false);
+                Events.ExecuteStrict(UIEvent.CloseActivePanel);
 			}
         }
 

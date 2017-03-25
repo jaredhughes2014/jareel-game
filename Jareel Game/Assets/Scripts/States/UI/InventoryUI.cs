@@ -112,7 +112,8 @@ namespace Game
 		[StateAdapter]
 		private void AdaptUIState(UIState ui)
 		{
-			State.Open = ui.InventoryOpen;
+            State.Open = ui.OpenPanel == UIState.InventoryName;
+
 			if (!State.Open) {
 				ResetState();
 			}
