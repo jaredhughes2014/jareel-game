@@ -6,22 +6,36 @@ namespace Game
     /// <summary>
     /// Renders the basic HUD. This is the UI the user sees when they are not in combat
     /// </summary>
-    public class HUDView : MonoStateSubscriber<UIState>
+    public class HUDView : MonoStateSubscriber<HUDState>
     {
+        #region Fields
+
         /// <summary>
         /// The root of the view
         /// </summary>
         [SerializeField] private GameObject m_viewRoot;
 
         /// <summary>
+        /// The root of the button slider
+        /// </summary>
+        [SerializeField] private GameObject m_sliderRoot;
+
+        /// <summary>
+        /// The root of the button which opens the button slider
+        /// </summary>
+        [SerializeField] private GameObject m_sliderButton;
+
+        #endregion
+
+        /// <summary>
         /// Determine if this view should be hidden or visible
         /// </summary>
         /// <param name="ui"></param>
-        protected override void OnStateChanged(UIState ui)
+        protected override void OnStateChanged(HUDState ui)
         {
-			bool open = !ui.InCombat && !ui.InventoryOpen;
-
-            m_viewRoot.SetActive(open);
+            m_viewRoot.SetActive(ui.Open);
+            m_sliderRoot.SetActive(ui.SliderOpen);
+            m_sliderButton.SetActive(!ui.SliderOpen);
         }
 
         #region Events
@@ -39,7 +53,24 @@ namespace Game
         /// </summary>
         public void OpenInventory()
         {
-            Events.ExecuteStrict(UIEvent.SetInventoryOpen, true);
+            Events.ExecuteStrict(UIEvent.OpenPanel, UIState.InventoryName);
+        }
+
+        /// <summary>
+        /// Opens the character sheet view
+        /// </summary>
+        public void OpenCharacterSheet()
+        {
+            Events.ExecuteStrict(UIEvent.OpenPanel, UIState.CharacterSheetName);
+        }
+
+        /// <summary>
+        /// Sets the slider to be either open or closed
+        /// </summary>
+        /// <param name="open">If true, the slider will open</param>
+        public void SetSliderOpen(bool open)
+        {
+            Events.ExecuteStrict(HUDEvent.SetSliderOpen, open);
         }
 
         #endregion

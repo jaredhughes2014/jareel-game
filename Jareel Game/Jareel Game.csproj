@@ -93,14 +93,21 @@
     <Compile Include="Assets\Scripts\Master.cs" />
     <Compile Include="Assets\Scripts\States\Player\Action.cs" />
     <Compile Include="Assets\Scripts\States\Player\Inventory.cs" />
+    <Compile Include="Assets\Scripts\States\Player\Session.cs" />
+    <Compile Include="Assets\Scripts\States\Player\Stats.cs" />
+    <Compile Include="Assets\Scripts\States\UI\Combat.cs" />
+    <Compile Include="Assets\Scripts\States\UI\HUD.cs" />
     <Compile Include="Assets\Scripts\States\UI\InventoryUI.cs" />
     <Compile Include="Assets\Scripts\States\UI\UI.cs" />
     <Compile Include="Assets\Scripts\Utility\ComponentCache.cs" />
-    <Compile Include="Assets\Scripts\Views\ActionsView.cs" />
+    <Compile Include="Assets\Scripts\Utility\InputUtility.cs" />
+    <Compile Include="Assets\Scripts\Utility\TimeTravelerView.cs" />
+    <Compile Include="Assets\Scripts\Views\CombatView.cs" />
     <Compile Include="Assets\Scripts\Views\HUDView.cs" />
     <Compile Include="Assets\Scripts\Views\Inventory\BagSlotView.cs" />
     <Compile Include="Assets\Scripts\Views\Inventory\InventoryDebugView.cs" />
     <Compile Include="Assets\Scripts\Views\InventoryView.cs" />
+    <Compile Include="Assets\Scripts\Views\ItemFullView.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

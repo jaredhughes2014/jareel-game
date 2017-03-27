@@ -7,7 +7,10 @@ namespace Game
     /// </summary>
     public enum UIEvent
     {
-        SetInventoryOpen
+        OpenPanel,
+        CloseActivePanel,
+
+        SetHUDSliderOpen,
     }
 
     /// <summary>
@@ -16,19 +19,37 @@ namespace Game
     [StateContainer("ui")]
     public class UIState : State
     {
-		#region StateData
+        #region Constants
 
-		/// <summary>
-		/// If true, the action UI should open instead of the basic HUD
-		/// </summary>
-		[StateData] public bool InCombat { get; set; }
+        // Panel names
+        public const string InventoryName = "Inventory";
+        public const string CharacterSheetName = "CharacterSheet";
+        public const string CombatPanelName = "Combat";
+        public const string HUDName = "HUD";
+
+        #endregion
+
+        #region StateData
 
         /// <summary>
-        /// If true, the inventory view should be displayed
+        /// The name of the panel that is open. If no 
         /// </summary>
-        [StateData] public bool InventoryOpen { get; set; }
+        [StateData] public string OpenPanel { get; set; }
 
-		#endregion
+        /// <summary>
+        /// If true, the HUD slider is open
+        /// </summary>
+        [StateData] public bool HUDSliderOpen { get; set; }
+
+        #endregion
+
+        /// <summary>
+        /// Create a new UI state
+        /// </summary>
+        public UIState()
+        {
+            OpenPanel = HUDName;
+        }
     }
 
 	/// <summary>
@@ -39,27 +60,34 @@ namespace Game
         #region Event Listeners
 
         /// <summary>
-        /// If the user is not in combat, sets the inventory view open or closed.
+        /// Sets the open panel
         /// </summary>
-        /// <param name="open">If true, the inventory is open. Otherwise false</param>
-        [EventListener(UIEvent.SetInventoryOpen)]
-        private void SetInventoryOpen(bool open)
+        /// <param name="panel">The name of the panel to open</param>
+        [EventListener(UIEvent.OpenPanel)]
+        private void OpenPanel(string panel)
         {
-            if (!State.InCombat) {
-                State.InventoryOpen = open;
-            }
+            State.OpenPanel = panel;
         }
 
         /// <summary>
-        /// Sets the state of the combat UI. This will always set the inventory to closed
-        /// as well, even if leaving combat
+        /// Sets the 
+        /// </summary>
+        /// <param name="open">If true, the inventory is open. Otherwise false</param>
+        [EventListener(UIEvent.CloseActivePanel)]
+        private void CloseOpenPanel()
+        {
+            State.OpenPanel = UIState.HUDName;
+        }
+
+        /// <summary>
+        /// Sets the state of the combat UI. This will automatically open the combat panel
+        /// if it is true, or the HUD panel otherwise
         /// </summary>
         /// <param name="inCombat">Sets the user to be in or out of combat</param>
         [EventListener(GeneralEvent.SetInCombat)]
         private void SetInCombat(bool inCombat)
         {
-            State.InventoryOpen = false;
-            State.InCombat = inCombat;
+            State.OpenPanel = (inCombat) ? UIState.CombatPanelName : UIState.HUDName;
         }
 
         #endregion
@@ -71,8 +99,8 @@ namespace Game
         public override UIState CloneState()
         {
             return new UIState() {
-                InCombat = State.InCombat,
-                InventoryOpen = State.InventoryOpen,
+                OpenPanel = State.OpenPanel,
+                HUDSliderOpen = State.HUDSliderOpen
             };
         }
     }

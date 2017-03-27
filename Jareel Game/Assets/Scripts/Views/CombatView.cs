@@ -8,7 +8,7 @@ namespace Game
 	/// <summary>
 	/// Renders the view of the user's available actions
 	/// </summary>
-	public class ActionsView : MonoStateSubscriber<ActionState, UIState>
+	public class CombatView : MonoStateSubscriber<ActionState, CombatUIState>
 	{
         #region Fields
 
@@ -45,17 +45,17 @@ namespace Game
 		#endregion
 
 		#region Updates
-
-		/// <summary>
-		/// Every update, render the actions
-		/// </summary>
-		/// <param name="actions">The state to render this view from</param>
-		protected override void OnStateChanged(ActionState actions, UIState ui)
+		
+        /// <summary>
+        /// Every update, determine if this view needs to update based on the subscribed states
+        /// </summary>
+        /// <param name="actions">State of the player's actions</param>
+        /// <param name="ui">State of the combat UI</param>
+		protected override void OnStateChanged(ActionState actions, CombatUIState ui)
 		{
-            bool open = ui.InCombat;
-            m_viewRoot.SetActive(open);
+            m_viewRoot.SetActive(ui.Open);
 
-            if (open) {
+            if (ui.Open) {
                 var last = actions.ActionHistory.LastOrDefault();
 
                 if (string.IsNullOrEmpty(last)) {
@@ -79,12 +79,16 @@ namespace Game
 			switch (last) {
 				case (ActionState.Action1String):
 					return m_action1Button.color;
+
 				case (ActionState.Action2String):
 					return m_action2Button.color;
+
 				case (ActionState.Action3String):
 					return m_action3Button.color;
+
 				case (ActionState.Action4String):
 					return m_action4Button.color;
+
 				default: return Color.white;
 			}
 		}

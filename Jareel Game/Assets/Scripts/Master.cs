@@ -1,5 +1,6 @@
 ﻿using Jareel;
 using Jareel.Unity;
+using System.Text;
 using UnityEngine;
 
 namespace Game
@@ -14,14 +15,21 @@ namespace Game
 		/// </summary>
 		protected override void UseControllers()
 		{
-            //Player Data Controllers
+            // Game Data
             Use<SessionState, SessionController>();
-            Use<ActionState, ActionController>();
-            Use<InventoryState, InventoryController>();
 
-            //UI controllers
+            // Player Data
+            Use<PlayerStatsState, PlayerStatsController>();
+            Use<InventoryState, InventoryController>();
+            Use<ActionState, ActionController>();
+            Use<CharacterState, CharacterController>();
+
+            // UI
             Use<UIState, UIController>();
 			Use<InventoryUIState, InventoryUIController>();
+            Use<HUDState, HUDController>();
+            Use<CombatUIState, CombatUIController>();
+            Use<CharacterSheetState, CharacterSheetController>();
 		}
 	}
 
@@ -30,10 +38,12 @@ namespace Game
 	/// </summary>
 	public class Master : MonoMasterController<GameMaster>
 	{
-		/// <summary>
-		/// In the editor, copy a save file here to load from that save file
-		/// </summary>
-		[SerializeField, TextArea] private string m_saveFile;
+        #region Fields
+
+        /// <summary>
+        /// In the editor, copy a save file here to load from that save file
+        /// </summary>
+        [SerializeField, TextArea] private string m_saveFile;
 
 		/// <summary>
 		/// In the editor, copy a time traveler export to have states ready to play
@@ -45,14 +55,24 @@ namespace Game
 		/// </summary>
 		[SerializeField] private TimeTravelerView m_timeTraveler;
 
-		/// <summary>
-		/// Check for a debug save file to load from
-		/// </summary>
-		private void Start()
+        /// <summary>
+        /// If true, all events will be logged
+        /// </summary>
+        [SerializeField] private bool m_logEvents = true;
+
+        #endregion
+
+        #region Setup
+
+        /// <summary>
+        /// Check for a debug save file to load from
+        /// </summary>
+        private void Start()
 		{
 			if (!string.IsNullOrEmpty(m_saveFile)) {
 				Master.ImportState(m_saveFile);
 			}
+            Master.OnEventExecuted += LogEvent;
 		}
 
         /// <summary>
@@ -83,6 +103,32 @@ namespace Game
         private void OnDestroy()
 		{
 			Debug.Log(Master.ExportDebugState());
-		}
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Prints a debug statement every time an event is executed
+        /// </summary>
+        /// <param name="ev">The event that was executed</param>
+        /// <param name="args">The arguments provided with it</param>
+        private void LogEvent(object ev, object[] args)
+        {
+            if (m_logEvents) {
+                var sb = new StringBuilder();
+
+                sb.Append(string.Format("Executing {0}({1})", ev, ev.GetType().Name));
+
+                if (args.Length > 0) {
+                    sb.Append("\nArgs: ");
+                    for (int i = 0; i < args.Length - 1; ++i) {
+                        sb.Append(args[i]).Append(", ");
+                    }
+                    sb.Append(args[args.Length - 1]);
+                }
+
+                Debug.Log(sb.ToString());
+            }
+        }
 	}
 }
